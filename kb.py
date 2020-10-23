@@ -1,54 +1,55 @@
 from __future__ import print_function
-import time
 import gevent
 from gevent import monkey
 monkey.patch_all()
-
+import time
+import click
 import requests
 from numpy import mean
 
 
-users = 10  # 用户数
-numbers = 100  # 请求次数
-req_url = "http://127.0.0.1:5000/user/tom"  # 请求URL
-
-print("请求URL: {url}".format(url=req_url))
-
-print("用户数：{}，循环次数: {}".format(users, numbers))
-
-print("============== Running ===================")
-
-pass_number = 0
-fail_number = 0
-
-run_time_list = []
+class statistical:
+    pass_number = 0
+    fail_number = 0
+    run_time_list = []
 
 
-def running(url):
-    global fail_number
-    global pass_number
+def running(url, numbers):
     for _ in range(numbers):
         start_time = time.time()
         r = requests.get(url)
         if r.status_code == 200:
-            pass_number = pass_number + 1
+            statistical.pass_number = statistical.pass_number + 1
             print(".", end="")
         else:
-            fail_number = fail_number + 1
+            statistical.fail_number = statistical.fail_number + 1
             print("F", end="")
 
         end_time = time.time()
         run_time = round(end_time - start_time, 4)
-        run_time_list.append(run_time)
+        statistical.run_time_list.append(run_time)
 
 
-jobs = [gevent.spawn(running, req_url) for _url in range(users)]
-gevent.wait(jobs)
+@click.command()
+@click.argument('url')
+@click.option('-u', default=1, help='运行用户的数量，默认 1', type=int)
+@click.option('-q', default=1, help='单个用户请求数，默认 1', type=int)
+def main(url, u, q):
+    print("请求URL: {url}".format(url=url))
+    print("用户数：{}，循环次数: {}".format(u, q))
+    print("============== Running ===================")
 
-print("\n============== Results ===================")
-print("最大:       {} s".format(str(max(run_time_list))))
-print("最小:       {} s".format(str(min(run_time_list))))
-print("平均:       {} s".format(str(round(mean(run_time_list), 4))))
-print("请求成功", pass_number)
-print("请求失败", fail_number)
-print("============== end ===================")
+    jobs = [gevent.spawn(running, url, q) for _url in range(u)]
+    gevent.wait(jobs)
+
+    print("\n============== Results ===================")
+    print("最大:       {} s".format(str(max(statistical.run_time_list))))
+    print("最小:       {} s".format(str(min(statistical.run_time_list))))
+    print("平均:       {} s".format(str(round(mean(statistical.run_time_list), 4))))
+    print("请求成功", statistical.pass_number)
+    print("请求失败", statistical.fail_number)
+    print("============== end ===================")
+
+
+if __name__ == "__main__":
+    main()
