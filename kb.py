@@ -6,6 +6,7 @@ import time
 import click
 import requests
 from numpy import mean
+from tqdm import tqdm
 
 
 class statistical:
@@ -15,15 +16,13 @@ class statistical:
 
 
 def running(url, numbers):
-    for _ in range(numbers):
+    for _ in tqdm(range(numbers)):
         start_time = time.time()
         r = requests.get(url)
         if r.status_code == 200:
             statistical.pass_number = statistical.pass_number + 1
-            print(".", end="")
         else:
             statistical.fail_number = statistical.fail_number + 1
-            print("F", end="")
 
         end_time = time.time()
         run_time = round(end_time - start_time, 4)
@@ -48,7 +47,7 @@ def main(url, u, q):
     print("平均:       {} s".format(str(round(mean(statistical.run_time_list), 4))))
     print("请求成功", statistical.pass_number)
     print("请求失败", statistical.fail_number)
-    print("============== end ===================")
+    print("================== end ====================")
 
 
 if __name__ == "__main__":
