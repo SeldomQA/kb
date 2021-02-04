@@ -23,14 +23,6 @@ def main():
         '-v', '--version', dest='version', action='store_true',
         help="show version")
 
-    parser.add_argument(
-        '-r',
-        help="run test case")
-
-    parser.add_argument(
-        '-m',
-        help="run tests modules, classes or even individual test methods from the command line ")
-
     parser.add_argument("url", help="URL to hit", nargs="?")
 
     parser.add_argument(

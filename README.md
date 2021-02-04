@@ -15,8 +15,8 @@ kb 是一个简单的性能测试脚本，通过`协程`模拟并发请求。
 查看帮助：
 
 ```py
-kb --help
-usage: kb [-h] [-v] [-r R] [-m M] [-u USERS] [-q REQUESTS] [url]
+> kb --help
+usage: kb [-h] [-v] [-u USERS] [-q REQUESTS] [url]
 
 kb is a simple performance testing tool, Simulate concurrent requests through
 a coroutine.
@@ -27,9 +27,6 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -v, --version         show version
-  -r R                  run test case
-  -m M                  run tests modules, classes or even individual test
-                        methods from the command line
   -u USERS, --users USERS
                         Number of concurrent users
   -q REQUESTS, --requests REQUESTS
