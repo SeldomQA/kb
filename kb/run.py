@@ -7,7 +7,7 @@ import time
 import argparse
 import requests
 from numpy import mean
-from tqdm import tqdm
+from tqdm import trange
 
 from kb import __description__, __version__
 
@@ -55,7 +55,7 @@ class Statistical:
 
 
 def running(url, numbers):
-    for _ in tqdm(range(numbers)):
+    for _ in trange(numbers):
         start_time = time.time()
         r = requests.get(url)
         if r.status_code == 200:
@@ -69,20 +69,21 @@ def running(url, numbers):
 
 
 def load(url, args):
-    print("请求URL: {url}".format(url=url))
-    print("用户数：{}，循环次数: {}".format(args.users, args.requests))
+    print("URL: {url}".format(url=url))
+    print("users: {}, requests: {}".format(args.users, args.requests))
     print("============== Running ===================")
 
-    jobs = [gevent.spawn(running, url, args.requests) for _url in range(args.users)]
+    jobs = [gevent.spawn(running, url, args.requests) for _url in trange(args.users)]
     gevent.wait(jobs)
 
     print("\n============== Results ===================")
-    print("最大:       {} s".format(str(max(Statistical.run_time_list))))
-    print("最小:       {} s".format(str(min(Statistical.run_time_list))))
-    print("平均:       {} s".format(str(round(mean(Statistical.run_time_list), 4))))
-    print("请求成功", Statistical.pass_number)
-    print("请求失败", Statistical.fail_number)
-    print("================== end ====================")
+    print("Max:       {} s".format(str(max(Statistical.run_time_list))))
+    print("Min:       {} s".format(str(min(Statistical.run_time_list))))
+    print("Average:   {} s".format(str(round(mean(Statistical.run_time_list), 4))))
+    print("pass:  {}".format(Statistical.pass_number))
+    print("fail:  {}".format(Statistical.fail_number))
+    print("total: {}".format(Statistical.pass_number + Statistical.fail_number))
+    print("================== end ===================")
 
 
 def console_main():

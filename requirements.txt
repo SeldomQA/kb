@@ -1,5 +1,4 @@
-requests==2.22.0
-gevent==20.9.0
+requests>=2.22.0
+gevent>=20.9.0
 numpy==1.19.2
-click==7.1.2
-tqdm==4.54.0
+tqdm>=4.54.0
