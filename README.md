@@ -5,7 +5,9 @@ kb 是一个简单的性能测试脚本，通过`协程`模拟并发请求。
 ## install
 
 ```shell
-> pip3 install requirements.txt
+> git clone https://github.com/SeldomQA/kb
+> cd kb
+> python3 setup.py install
 ```
 
 ## 使用
@@ -13,19 +15,31 @@ kb 是一个简单的性能测试脚本，通过`协程`模拟并发请求。
 查看帮助：
 
 ```py
-> python3 kb.py --help
-Usage: kb.py [OPTIONS] URL
+kb --help
+usage: kb [-h] [-v] [-r R] [-m M] [-u USERS] [-q REQUESTS] [url]
 
-Options:
-  -u INTEGER  运行用户的数量，默认 1
-  -q INTEGER  单个用户请求数，默认 1
-  --help      Show this message and exit.
+kb is a simple performance testing tool, Simulate concurrent requests through
+a coroutine.
+
+positional arguments:
+  url                   URL to hit
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --version         show version
+  -r R                  run test case
+  -m M                  run tests modules, classes or even individual test
+                        methods from the command line
+  -u USERS, --users USERS
+                        Number of concurrent users
+  -q REQUESTS, --requests REQUESTS
+                        Number of requests
 ```
 
 ## 运行
 
 ```shell
-python3 kb.py https://wwww.baidu.com -u 10 -q 10
+> kb http://wwww.baidu.com -u 10 -q 10
 请求URL: https://wwww.baidu.com
 用户数：10，循环次数: 10
 ============== Running ===================
