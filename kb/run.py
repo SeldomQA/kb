@@ -5,7 +5,7 @@ monkey.patch_all()
 import sys
 import time
 import argparse
-import requests
+import httpx
 import numpy
 from tqdm import trange
 
@@ -57,7 +57,7 @@ class Statistical:
 def running(url, numbers):
     for _ in trange(numbers):
         start_time = time.time()
-        r = requests.get(url)
+        r = httpx.get(url)
         if r.status_code == 200:
             Statistical.pass_number = Statistical.pass_number + 1
         else:
