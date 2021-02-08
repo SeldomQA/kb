@@ -2,12 +2,18 @@
 
 kb 是一个简单的性能测试脚本，通过`协程`模拟并发请求。
 
-## install
+## Installation
 
 ```shell
 > git clone https://github.com/SeldomQA/kb
 > cd kb
 > python3 setup.py install
+```
+
+or
+
+```shell
+> pip3 clone git+https://github.com/SeldomQA/kb.git --upgrade
 ```
 
 ## 使用
