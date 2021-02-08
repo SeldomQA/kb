@@ -6,7 +6,7 @@ import sys
 import time
 import argparse
 import requests
-from numpy import mean
+import numpy
 from tqdm import trange
 
 from kb import __description__, __version__
@@ -77,13 +77,18 @@ def load(url, args):
     gevent.wait(jobs)
 
     print("\n============== Results ===================")
-    print("Max:       {} s".format(str(max(Statistical.run_time_list))))
-    print("Min:       {} s".format(str(min(Statistical.run_time_list))))
-    print("Average:   {} s".format(str(round(mean(Statistical.run_time_list), 4))))
-    print("pass:  {}".format(Statistical.pass_number))
-    print("fail:  {}".format(Statistical.fail_number))
-    print("total: {}".format(Statistical.pass_number + Statistical.fail_number))
+    print("Samples: {}".format(Statistical.pass_number + Statistical.fail_number))
+    print("Average:      {} s".format(str(round(numpy.mean(Statistical.run_time_list), 4))))
+    print("Max:          {} s".format(str(max(Statistical.run_time_list))))
+    print("Min:          {} s".format(str(min(Statistical.run_time_list))))
+    print("Median:       {} s".format(str(numpy.median(numpy.array(Statistical.run_time_list)))))
+    print("90% Line:       {} s".format(str(numpy.percentile(numpy.array(Statistical.run_time_list), 90))))
+    print("95% Line:       {} s".format(str(numpy.percentile(numpy.array(Statistical.run_time_list), 95))))
+    print("99% Line:       {} s".format(str(numpy.percentile(numpy.array(Statistical.run_time_list), 99))))
+    print("Total time:   {} s".format(str(sum(Statistical.run_time_list))))
+    print("pass:  {p}, fail:  {f}".format(p=Statistical.pass_number, f=Statistical.fail_number))
     print("================== end ===================")
+    print("Assertion HTTP status code 200")
 
 
 def console_main():
