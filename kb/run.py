@@ -10,6 +10,11 @@ import numpy
 from tqdm import trange
 
 from kb import __description__, __version__
+from rich.progress import track
+from rich.console import Console
+from rich.table import Column, Table
+
+console = Console()
 
 
 def main():
@@ -55,7 +60,7 @@ class Statistical:
 
 
 def running(url, numbers):
-    for _ in trange(numbers):
+    for _ in range(numbers):
         start_time = time.time()
         r = httpx.get(url)
         if r.status_code == 200:
@@ -69,26 +74,48 @@ def running(url, numbers):
 
 
 def load(url, args):
-    print("URL: {url}".format(url=url))
-    print("users: {}, requests: {}".format(args.users, args.requests))
-    print("============== Running ===================")
+    console.print(f"🌐 URL: {url}", style="magenta")
+    console.print("👥", f"Users: {args.users}   📨 requests: {args.requests}", style="magenta")
+    console.print("============== Running ===================", style="bold blue")
 
-    jobs = [gevent.spawn(running, url, args.requests) for _url in trange(args.users)]
+    jobs = [gevent.spawn(running, url, args.requests) for _url in track(range(args.users))]
     gevent.wait(jobs)
 
-    print("\n============== Results ===================")
-    print("Samples: {}".format(Statistical.pass_number + Statistical.fail_number))
-    print("Average:      {} s".format(str(round(numpy.mean(Statistical.run_time_list), 4))))
-    print("Max:          {} s".format(str(max(Statistical.run_time_list))))
-    print("Min:          {} s".format(str(min(Statistical.run_time_list))))
-    print("Median:       {} s".format(str(numpy.median(numpy.array(Statistical.run_time_list)))))
-    print("90% Line:       {} s".format(str(numpy.percentile(numpy.array(Statistical.run_time_list), 90))))
-    print("95% Line:       {} s".format(str(numpy.percentile(numpy.array(Statistical.run_time_list), 95))))
-    print("99% Line:       {} s".format(str(numpy.percentile(numpy.array(Statistical.run_time_list), 99))))
-    print("Total time:   {} s".format(str(sum(Statistical.run_time_list))))
-    print("pass:  {p}, fail:  {f}".format(p=Statistical.pass_number, f=Statistical.fail_number))
-    print("================== end ===================")
-    print("Assertion HTTP status code 200")
+    console.print("\n============== Results ===================", style="bold blue")
+    console.print("Samples: {s} 📨      pass:  {p} ✔️    fail:  {f}❌️".format(
+        s=str(Statistical.pass_number + Statistical.fail_number),
+        p=str(Statistical.pass_number),
+        f=str(Statistical.fail_number)
+    ))
+
+    table = Table(show_header=True, header_style="bold magenta")
+    table.add_column("Title", style="green", width=12)
+    table.add_column("Second")
+
+    table.add_row(
+        "Average:", str(round(numpy.mean(Statistical.run_time_list), 4))
+    )
+    table.add_row(
+        "Max:", str(max(Statistical.run_time_list))
+    )
+    table.add_row(
+        "Min:", str(min(Statistical.run_time_list))
+    )
+    table.add_row(
+        "Median:", str(numpy.median(numpy.array(Statistical.run_time_list)))
+    )
+    table.add_row(
+        "90% Line:", str(numpy.percentile(numpy.array(Statistical.run_time_list), 90))
+    )
+    table.add_row(
+        "95% Line:", str(numpy.percentile(numpy.array(Statistical.run_time_list), 95))
+    )
+    table.add_row(
+        "Total time:", str(numpy.percentile(numpy.array(Statistical.run_time_list), 99))
+    )
+    console.print(table)
+    console.print("================== Ending ===================", style="bold blue")
+    console.print("Assertion HTTP status code 200")
 
 
 def console_main():

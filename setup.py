@@ -27,6 +27,7 @@ setup(
         'gevent>=20.9.0',
         'numpy>=1.19.2',
         'tqdm>=4.54.0',
+        'rich>=10.12.0'
     ],
     classifiers=[
         'Intended Audience :: Developers',
