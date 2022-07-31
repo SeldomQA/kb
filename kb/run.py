@@ -111,7 +111,7 @@ def load(url, args):
         "95% Line:", str(numpy.percentile(numpy.array(Statistical.run_time_list), 95))
     )
     table.add_row(
-        "Total time:", str(numpy.percentile(numpy.array(Statistical.run_time_list), 99))
+        "99% Line:", str(numpy.percentile(numpy.array(Statistical.run_time_list), 99))
     )
     console.print(table)
     console.print("================== Ending ===================", style="bold blue")
